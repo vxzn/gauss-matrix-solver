@@ -38,7 +38,6 @@ with st.sidebar:
     
     st.write("---")
     
-    # KARTU IDENTITAS MAHASISWA MINIMALIS PUTIH
     st.markdown("""
         <div style="border: 1px solid #E5E7EB; padding: 16px; border-radius: 12px; background-color: #F9FAFB;">
             <p style="margin: 0; font-size: 0.7rem; color: #6B7280; font-weight: 600; letter-spacing: 0.5px;">MAHASISWA</p>
@@ -51,62 +50,89 @@ with st.sidebar:
 with open("style.css", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# --- HERO SECTION (CLEAN TECH) ---
+# --- HERO SECTION ---
 st.markdown("<h1 class='brand-title'>Gauss Solver</h1>", unsafe_allow_html=True)
 st.markdown("<p class='brand-subtitle'>Kalkulator Operasi Baris Elementer (OBE) minimalis untuk penyelesaian matriks secara akurat.</p>", unsafe_allow_html=True)
 
-kolom_kiri, kolom_kanan = st.columns([2, 1])
+# --- RESTRUKTURISASI: PENGATURAN ORDO & PRESET DI LETAKKAN DI ATAS (SANGAT ERGONOMIS DI HP) ---
+st.markdown("### 🛠️ Konfigurasi Utama")
+st.markdown("Silakan pilih ordo matriks dan gunakan opsi preset jika ingin memuat contoh soal secara otomatis:")
 
-with kolom_kanan:
-    st.markdown("### 🛠️ Ordo Matriks")
-    n = st.number_input("Ordo N x N:", min_value=2, max_value=10, value=3, step=1, label_visibility="collapsed")
-    
-    st.write("")
-    st.markdown("##### 💡 Contoh Soal Cepat:")
-    preset_normal = st.button("Solusi Unik (Normal)", type="secondary")
-    preset_no_sol = st.button("Kasus Singular (Eror)", type="secondary")
+kolom_ordo, kolom_preset = st.columns([1, 2])
 
-with kolom_kiri:
-    st.markdown("### 📥 Input Nilai Matriks $[A | b]$")
+with kolom_ordo:
+    n = st.number_input("Ordo Matriks (N x N):", min_value=2, max_value=6, value=3, step=1)
+
+with kolom_preset:
+    st.write("<label>Pilih Opsi Preset Soal:</label>", unsafe_allow_html=True)
+    st.markdown('<div class="preset-container">', unsafe_allow_html=True)
+    cols_btn = st.columns(2)
+    with cols_btn[0]:
+        preset_normal = st.button("Solusi Unik (Normal)", type="secondary", use_container_width=True)
+    with cols_btn[1]:
+        preset_no_sol = st.button("Kasus Singular (Error)", type="secondary", use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+st.write("---")
+
+# --- AREA INPUT UTAMA ---
+st.markdown("### 📥 Input Nilai Matriks $[A | b]$")
+st.markdown("Isi nilai elemen matriks di bawah ini. Kolom paling kanan berwarna biru adalah nilai konstanta hasil ($b$).")
+
+preset_A = [["3", "3/2", "-1"], ["2", "-2", "4"], ["-1", "0.5", "-1"]]
+preset_b = ["1", "-2", "0"]
+
+if preset_no_sol and n == 3:
+    preset_A = [["1", "1", "1"], ["2", "2", "2"], ["1", "-1", "2"]]
+    preset_b = ["3", "4", "1"]
     
-    preset_A = [["3", "3/2", "-1"], ["2", "-2", "4"], ["-1", "0.5", "-1"]]
-    preset_b = ["1", "-2", "0"]
-    
-    if preset_no_sol and n == 3:
-        preset_A = [["1", "1", "1"], ["2", "2", "2"], ["1", "-1", "2"]]
-        preset_b = ["3", "4", "1"]
-        
-    A, b = [], []
-    input_valid = True
-    
-    with st.container():
-        for i in range(n):
-            cols = st.columns(n + 1)
-            baris_A = []
-            for j in range(n):
-                with cols[j]:
-                    nilai_inisial = preset_A[i][j] if (preset_normal or preset_no_sol) and n == 3 else "0"
-                    teks_A = st.text_input(f"A_{i}_{j}", value=nilai_inisial, key=f"A_{i}_{j}", label_visibility="collapsed")
-                    try:
-                        teks_bersih = teks_A.strip()
-                        nilai_A = float(Fraction(teks_bersih)) if teks_bersih != "" else 0.0
-                    except Exception:
-                        st.error("Format salah")
-                        input_valid = False
-                        nilai_A = 0.0
-                    baris_A.append(nilai_A)
-            A.append(baris_A)
-            
-            with cols[n]:
-                nilai_b_inisial = preset_b[i] if (preset_normal or preset_no_sol) and n == 3 else "0"
-                teks_b = st.text_input(f"b_{i}", value=nilai_b_inisial, key=f"b_{i}", label_visibility="collapsed")
+A, b = [], []
+input_valid = True
+
+st.markdown('<div class="matrix-area">', unsafe_allow_html=True)
+with st.container():
+    for i in range(n):
+        cols = st.columns(n + 1)
+        baris_A = []
+        for j in range(n):
+            with cols[j]:
+                nilai_inisial = preset_A[i][j] if (preset_normal or preset_no_sol) and n == 3 else ""
+                # TAMBAHAN PENTING: Menggunakan placeholder dinamis (misal: a11, a12) agar pengguna tidak buta arah saat mengetik nilai
+                teks_A = st.text_input(
+                    f"A_{i}_{j}", 
+                    value=nilai_inisial, 
+                    key=f"A_{i}_{j}", 
+                    placeholder=f"a{i+1}{j+1}", 
+                    label_visibility="collapsed"
+                )
                 try:
-                    teks_b_bersih = teks_b.strip()
-                    nilai_b = float(Fraction(teks_b_bersih)) if teks_b_bersih != "" else 0.0
+                    teks_bersih = teks_A.strip()
+                    nilai_A = float(Fraction(teks_bersih)) if teks_bersih != "" else 0.0
                 except Exception:
+                    st.error("Format salah")
                     input_valid = False
-                    nilai_b = 0.0
-                b.append(nilai_b)
+                    nilai_A = 0.0
+                baris_A.append(nilai_A)
+        A.append(baris_A)
+        
+        with cols[n]:
+            nilai_b_inisial = preset_b[i] if (preset_normal or preset_no_sol) and n == 3 else ""
+            # TAMBAHAN PENTING: Menggunakan placeholder b1, b2, b3 untuk membedakan kolom konstanta hasil
+            teks_b = st.text_input(
+                f"b_{i}", 
+                value=nilai_b_inisial, 
+                key=f"b_{i}", 
+                placeholder=f"b{i+1}", 
+                label_visibility="collapsed"
+            )
+            try:
+                teks_b_bersih = teks_b.strip()
+                nilai_b = float(Fraction(teks_b_bersih)) if teks_b_bersih != "" else 0.0
+            except Exception:
+                input_valid = False
+                nilai_b = 0.0
+            b.append(nilai_b)
+st.markdown('</div>', unsafe_allow_html=True)
 
 st.write("---")
 
@@ -130,7 +156,7 @@ if st.button("MULAI PROSES KOMPUTASI", key="run_sim"):
             with container_langkah:
                 st.markdown(f"<div class='premium-card'>", unsafe_allow_html=True)
                 st.markdown(f"<h4 style='color: #1E3A8A; margin-top:0; margin-bottom:12px;'>Tahap Ke-{indeks + 1}</h4>", unsafe_allow_html=True)
-                st.markdown(langkah["teks"])
+                st.write(langkah["teks"]) 
                 st.table(data=langkah["data"])
                 st.markdown("</div>", unsafe_allow_html=True)
             
