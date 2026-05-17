@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* --- ROOT COLORS & FONTS (HUMAN STUDIO THEME) --- */
+/* ==========================================================================
+   💻 DESAIN UTAMA (UNTUK LAPTOP / LAYAR BESAR)
+   ========================================================================== */
 html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"], .stMarkdown, p, span, label, th, td, input {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     -webkit-font-smoothing: antialiased;
 }
 
-/* Background Workspace: Hangat & Tidak Kaku (Off-Black/Charcoal) */
+/* Background Workspace (Charcoal Premium) */
 [data-testid="stAppViewContainer"], [data-testid="stHeader"] { 
     background-color: #12141C !important; 
 }
@@ -15,7 +17,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"], .stMar
     border-right: 1px solid #222634 !important; 
 }
 
-/* Tipografi Khas Manusia (Sans-Serif Modern & Editorial) */
+/* Tipografi Minimalis Modern */
 .brand-title {
     color: #F3F4F6 !important;
     font-weight: 700; font-size: 2.8rem;
@@ -30,7 +32,7 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"], .stMar
 }
 h1, h2, h3, h4, h5, h6 { color: #FFFFFF !important; font-weight: 700 !important; letter-spacing: -0.3px; }
 
-/* Grid Input Matriks yang Organik & Elegan */
+/* Grid Input Matriks */
 .stTextInput>div>div>input { 
     border: 1.5px solid #2A2F42 !important; 
     background-color: #1A1D29 !important; 
@@ -43,35 +45,76 @@ h1, h2, h3, h4, h5, h6 { color: #FFFFFF !important; font-weight: 700 !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .stTextInput>div>div>input:focus { 
-    border-color: #D4AF37 !important; /* Aksen Gold Klasik */
+    border-color: #D4AF37 !important; 
     background-color: #161923 !important;
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
 }
 
-/* Tabel Langkah OBE Monokrom Modern */
-.stTable table { background-color: #1A1D29 !important; border: 1px solid #252A3C !important; border-collapse: separate !important; border-spacing: 0 !important; border-radius: 14px !important; overflow: hidden !important; }
+/* Tabel Langkah OBE */
+.stTable table { width: 100% !important; background-color: #1A1D29 !important; border: 1px solid #252A3C !important; border-collapse: separate !important; border-spacing: 0 !important; border-radius: 14px !important; overflow: hidden !important; }
 .stTable th { background-color: #222634 !important; color: #D4AF37 !important; border-bottom: 1px solid #2A2F42 !important; font-weight: 700 !important; font-size: 0.85rem !important; text-transform: uppercase; letter-spacing: 1px; padding: 16px !important; }
 .stTable td { color: #E4E4E7 !important; border-bottom: 1px solid #222634 !important; font-size: 0.95rem !important; padding: 14px !important; }
 
-/* Komponen Kartu Proses & Hasil */
+/* Komponen Kartu & Output */
 .premium-card { background-color: #1A1D29 !important; border: 1px solid #252A3C !important; border-radius: 16px; padding: 24px; margin-bottom: 25px; }
 .metric-card { background-color: #161923 !important; border: 1px solid #252A3C !important; border-radius: 16px; padding: 20px; text-align: left; border-left: 3px solid #D4AF37; }
 div[data-testid="stMetricLabel"] > div { color: #8E93A6 !important; font-size: 0.8rem !important; text-transform: uppercase; letter-spacing: 0.5px; }
 div[data-testid="stMetricValue"] > div { font-weight: 800 !important; font-size: 2.4rem !important; color: #FFFFFF !important; }
 .stAlert { background-color: #1A1D29 !important; border: 1px solid #2A2F42 !important; border-radius: 14px !important; }
-
-/* Status Badge & Deteksi Langkah */
 .status-badge { font-weight: 600; color: #D4AF37 !important; background-color: rgba(212, 175, 55, 0.08); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.15); display: inline-block; font-size: 0.85rem; margin-bottom: 20px; }
 .verify-card { background-color: rgba(255,255,255,0.02); padding: 14px 18px; border-radius: 10px; border: 1px solid #252A3C; margin-top: 10px; color: #C4C4C6 !important; font-size: 0.9rem; }
 
-/* Tombol Eksekusi: Minimalis Elegan */
+/* Tombol Eksekusi */
 .stButton>button { 
     width: 100%; border-radius: 12px; font-weight: 600; font-size: 1rem; letter-spacing: 0.3px;
     background: #D4AF37 !important; color: #12141C !important; border: none !important; padding: 14px 0; 
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1); transition: all 0.2s ease;
 }
-.stButton>button:hover { 
-    background: #F3E5AB !important; 
-    transform: translateY(-1.5px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+.stButton>button:hover { background: #F3E5AB !important; transform: translateY(-1.5px); }
+
+
+/* ==========================================================================
+   📱 ADAPTASI OTOMATIS UNTUK HANDPHONE & TABLET (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Perkecil ukuran judul utama agar tidak terpotong di layar HP */
+    .brand-title {
+        font-size: 1.8rem !important;
+        text-align: center;
+    }
+    .brand-subtitle {
+        font-size: 0.85rem !important;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Modifikasi Kotak Matriks agar pas saat berjejer di layar sempit */
+    .stTextInput>div>div>input { 
+        font-size: 0.95rem !important; 
+        padding: 6px 0 !important;
+        border-radius: 8px !important;
+    }
+
+    /* Membuat Tabel Hasil Analisis OBE Bisa Digeser Kanan-Kiri di HP (Anti-Pecah) */
+    .stTable {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .stTable th, .stTable td {
+        padding: 10px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Sesuaikan padding kartu agar tidak memakan ruang di HP */
+    .premium-card {
+        padding: 16px !important;
+    }
+    
+    /* Vektor Hasil Akhir dibuat vertikal dan kompak di HP */
+    div[data-testid="stMetricValue"] > div { 
+        font-size: 1.8rem !important; 
+    }
 }
