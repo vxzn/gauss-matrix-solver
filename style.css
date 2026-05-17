@@ -1,105 +1,140 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
 
-/* --- ROOT COLORS & FONTS (MINIMALIST BLUE-WHITE) --- */
+/* --- ROOT COLORS & FONTS (HUMAN STUDIO THEME - UNIFIED) --- */
 html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"], .stMarkdown, p, span, label, th, td, input {
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     -webkit-font-smoothing: antialiased;
 }
 
-/* Background Workspace: Putih Bersih & Abu-abu Lembut */
+/* Background Workspace: Hangat & Konsisten (Off-Black) */
 [data-testid="stAppViewContainer"], [data-testid="stHeader"] { 
-    background-color: #FAFAFA !important; 
+    background-color: #12141C !important; 
 }
 [data-testid="stSidebar"] { 
-    background-color: #FFFFFF !important; 
-    border-right: 1px solid #E5E7EB !important; 
+    background-color: #161923 !important; 
+    border-right: 1px solid #222634 !important; 
 }
 
-/* Tipografi Minimalis Modern */
+/* Tipografi Editorial Modern */
 .brand-title {
-    color: #1E3A8A !important; /* Biru Gelap Tepercaya */
-    font-weight: 700; font-size: 2.4rem;
-    margin-bottom: 5px;
-    letter-spacing: -0.5px;
+    font-family: 'Playfair Display', serif !important;
+    color: #F3F4F6 !important;
+    font-weight: 600; font-size: 2.8rem; font-style: italic;
+    margin-bottom: 5px; letter-spacing: -0.3px;
 }
-.brand-subtitle { 
-    color: #4B5563 !important; /* Abu-abu Lembut */
-    font-size: 0.95rem;
-    letter-spacing: 0.1px;
-    margin-bottom: 35px;
-}
-h1, h2, h3, h4, h5, h6, p, span, label { color: #1F2937 !important; }
-label { font-weight: 600 !important; color: #374151 !important; }
+.brand-subtitle { color: #8E93A6 !important; font-size: 0.95rem; letter-spacing: 0.3px; margin-bottom: 35px; }
+h1, h2, h3, h4, h5, h6 { color: #FFFFFF !important; font-weight: 700 !important; letter-spacing: -0.3px; }
 
-/* Grid Input Matriks Lembut (Sangat Nyaman di Mata) */
+/* Grid Input Matriks Lembut (Laptop Default) */
 .stTextInput>div>div>input { 
-    border: 1.5px solid #E5E7EB !important; 
-    background-color: #FFFFFF !important; 
-    color: #1E3A8A !important; 
-    text-align: center; 
-    font-weight: 600 !important; 
-    font-size: 1.1rem !important; 
-    border-radius: 10px !important;
-    padding: 10px 0 !important;
-    transition: all 0.2s ease;
+    border: 1.5px solid #2A2F42 !important; 
+    background-color: #1A1D29 !important; 
+    color: #FFFFFF !important; 
+    text-align: center; font-weight: 600 !important; font-size: 1.1rem !important; border-radius: 12px !important;
+    padding: 10px 0 !important; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .stTextInput>div>div>input:focus { 
-    border-color: #3B82F6 !important; /* Biru Aksentuasi Gemini */
-    background-color: #FFFFFF !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    border-color: #D4AF37 !important; background-color: #161923 !important;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
 }
 
-/* Tabel Langkah OBE Berwarna Biru Teduh */
-.stTable table { width: 100% !important; background-color: #FFFFFF !important; border: 1px solid #E5E7EB !important; border-collapse: separate !important; border-spacing: 0 !important; border-radius: 12px !important; overflow: hidden !important; }
-.stTable th { background-color: #F0F4FF !important; color: #1E3A8A !important; border-bottom: 1px solid #E5E7EB !important; font-weight: 700 !important; font-size: 0.85rem !important; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px !important; }
-.stTable td { color: #374151 !important; border-bottom: 1px solid #F3F4F6 !important; font-size: 0.95rem !important; padding: 12px !important; }
+/* Tabel Langkah OBE bergaya Monokrom Modern */
+.stTable table { width: 100% !important; background-color: #1A1D29 !important; border: 1px solid #252A3C !important; border-collapse: separate !important; border-spacing: 0 !important; border-radius: 14px !important; overflow: hidden !important; }
+.stTable th { background-color: #222634 !important; color: #D4AF37 !important; border-bottom: 1px solid #2A2F42 !important; font-weight: 700 !important; font-size: 0.85rem !important; text-transform: uppercase; letter-spacing: 1px; padding: 16px !important; }
+.stTable td { color: #E4E4E7 !important; border-bottom: 1px solid #222634 !important; font-size: 0.95rem !important; padding: 14px !important; }
 
-/* Komponen Kartu Putih Minimalis dengan Shadow Halus */
-.premium-card { 
-    background-color: #FFFFFF !important; 
-    border: 1px solid #E5E7EB !important; 
-    border-radius: 14px; 
-    padding: 24px; 
-    margin-bottom: 25px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-}
-.metric-card { 
-    background-color: #FFFFFF !important; 
-    border: 1px solid #E5E7EB !important; 
-    border-radius: 14px; 
-    padding: 20px; 
-    text-align: left; 
-    border-left: 4px solid #3B82F6; 
-}
-div[data-testid="stMetricLabel"] > div { color: #6B7280 !important; font-size: 0.8rem !important; text-transform: uppercase; letter-spacing: 0.5px; }
-div[data-testid="stMetricValue"] > div { font-weight: 700 !important; font-size: 2.2rem !important; color: #1E3A8A !important; }
-.stAlert { background-color: #EFF6FF !important; border: 1px solid #BFDBFE !important; border-radius: 12px !important; color: #1E40AF !important; }
+/* Komponen Kartu Proses & Hasil */
+.premium-card { background-color: #1A1D29 !important; border: 1px solid #252A3C !important; border-radius: 16px; padding: 24px; margin-bottom: 25px; }
+.metric-card { background-color: #161923 !important; border: 1px solid #252A3C !important; border-radius: 16px; padding: 20px; text-align: left; border-left: 3px solid #D4AF37; }
+div[data-testid="stMetricLabel"] > div { color: #8E93A6 !important; font-size: 0.8rem !important; text-transform: uppercase; letter-spacing: 0.5px; }
+div[data-testid="stMetricValue"] > div { font-weight: 800 !important; font-size: 2.4rem !important; color: #FFFFFF !important; }
+.stAlert { background-color: #1A1D29 !important; border: 1px solid #2A2F42 !important; border-radius: 14px !important; }
+.status-badge { font-weight: 600; color: #D4AF37 !important; background-color: rgba(212, 175, 55, 0.08); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.15); display: inline-block; font-size: 0.85rem; margin-bottom: 20px; }
+.verify-card { background-color: rgba(255,255,255,0.02); padding: 14px 18px; border-radius: 10px; border: 1px solid #252A3C; margin-top: 10px; color: #C4C4C6 !important; font-size: 0.9rem; }
 
-/* Status Badge */
-.status-badge { font-weight: 600; color: #2563EB !important; background-color: #EFF6FF; padding: 6px 14px; border-radius: 8px; border: 1px solid #DBEAFE; display: inline-block; font-size: 0.85rem; margin-bottom: 20px; }
-.verify-card { background-color: #F8FAFC; padding: 12px 16px; border-radius: 8px; border: 1px solid #E2E8F0; margin-top: 10px; color: #475569 !important; font-size: 0.9rem; }
-
-/* Tombol Eksekusi: Biru Solid Modern */
+/* Tombol Eksekusi Minimalis */
 .stButton>button { 
-    width: 100%; border-radius: 10px; font-weight: 600; font-size: 1rem; letter-spacing: 0.2px;
-    background: #3B82F6 !important; color: #FFFFFF !important; border: none !important; padding: 12px 0; 
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1); transition: all 0.2s ease;
+    width: 100%; border-radius: 12px; font-weight: 600; font-size: 1rem; letter-spacing: 0.3px;
+    background: #D4AF37 !important; color: #12141C !important; border: none !important; padding: 14px 0; 
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1); transition: all 0.2s ease;
 }
-.stButton>button:hover { 
-    background: #2563EB !important; 
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);
-}
+.stButton>button:hover { background: #F3E5AB !important; transform: translateY(-1.5px); }
+
 
 /* ==========================================================================
-   📱 RESPONSIVE AUTO-LAYOUT FOR PHONE & TABLET
-   ========================================================================== */
+   📱 PERBAIKAN TOTAL LAYOUT HANDPHONE & TABLET (RESPONSIVE ROMBAK TOTAL)
+   ========================================================================= */
 @media (max-width: 768px) {
-    .brand-title { font-size: 1.8rem !important; text-align: center; }
-    .brand-subtitle { font-size: 0.85rem !important; text-align: center; margin-bottom: 20px; }
-    .stTextInput>div>div>input { font-size: 0.95rem !important; padding: 6px 0 !important; border-radius: 8px !important; }
-    .stTable { display: block !important; overflow-x: auto !important; white-space: nowrap !important; width: 100% !important; -webkit-overflow-scrolling: touch; }
-    .stTable th, .stTable td { padding: 10px !important; font-size: 0.85rem !important; }
-    .premium-card { padding: 16px !important; }
-    div[data-testid="stMetricValue"] > div { font-size: 1.8rem !important; }
+    /* 1. Judul Dibuat Melebar Penuh & Proporsional */
+    .brand-title {
+        font-size: 1.8rem !important;
+        text-align: center !important;
+        margin-top: 10px !important;
+        margin-bottom: 8px !important;
+    }
+    .brand-subtitle {
+        font-size: 0.85rem !important;
+        text-align: center !important;
+        margin-bottom: 20px !important;
+        padding: 0 10px !important; /* Memberi ruang di HP */
+    }
+
+    /* 2. Rombak Grid Input Matriks agar Melebar Penuh (Anti-Tumpuk Vertical) */
+    /* Kita memaksa container input melebar penuh di container induknya */
+    div[data-testid="stFormSubmitButton"] + div > div, 
+    .stHorizontalBlock {
+        display: flex !important;
+        flex-direction: row !important; /* Paksa melebar ke samping */
+        flex-wrap: nowrap !important; /* Jangan biarkan patah ke bawah */
+        overflow-x: auto !important; /* Jika terlalu banyak input, buat bisa di-geser horizontal */
+        gap: 5px !important; /* Jarak antar kotak diperkecil */
+        padding: 5px 0 !important;
+        width: 100% !important;
+    }
+
+    /* Modifikasi kotak input individual agar ringkas & compact saat melebar */
+    .stTextInput>div>div>input { 
+        font-size: 0.9rem !important; 
+        padding: 6px 0 !important; 
+        border-radius: 8px !important;
+        width: 60px !important; /* Set lebar tetap yang ringkas per kotak di HP */
+        margin: 0 !important;
+    }
+    
+    /* Input di kolom Augmented | b juga disesuaikan */
+    div[data-testid="stBlock"] > .stTextInput {
+        width: auto !important;
+    }
+
+    /* 3. Membuat Tabel Langkah OBE Bisa Digeser Horizontal (Anti-Pecah) */
+    .stTable {
+        display: block !important;
+        overflow-x: auto !important; /* Kunci adaptasi matriks di HP */
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch; /* Scroll smooth di iOS */
+    }
+    .stTable th, .stTable td {
+        padding: 10px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* 4. Sesuaikan Padding Kartu & Elemen Kompak */
+    .premium-card {
+        padding: 16px !important;
+        border-radius: 12px !important;
+    }
+    
+    /* Vektor Hasil Akhir dibuat vertikal dan kompak di HP */
+    div[data-testid="stMetricValue"] > div { 
+        font-size: 1.8rem !important; 
+    }
+    .metric-card {
+        padding: 15px !important;
+    }
+    
+    /* Sidebar kompak di HP */
+    [data-testid="stSidebar"] {
+        padding-top: 20px !important;
+    }
 }
