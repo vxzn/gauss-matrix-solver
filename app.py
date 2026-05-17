@@ -5,8 +5,8 @@ from matrix_logic import eliminasi_gauss_ultimate, format_angka
 
 # --- INITIAL SETUP ---
 st.set_page_config(
-    page_title="Aljabar Linier - Gauss Solver",
-    page_icon="✍️",
+    page_title="Matrix Solver",
+    page_icon="🟦",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -15,36 +15,35 @@ st.set_page_config(
 with st.sidebar:
     st.markdown("""
         <div style="padding: 10px 0;">
-            <p style="margin: 0; font-size: 0.75rem; color: #D4AF37; font-weight: 700; letter-spacing: 1px;">LAB KOMPUTASI</p>
-            <h3 style="margin: 5px 0 0 0; font-size: 1.3rem; font-weight:700; color: #FFFFFF;">Konfigurasi Sistem</h3>
+            <p style="margin: 0; font-size: 0.75rem; color: #3B82F6; font-weight: 700; letter-spacing: 1px;">KONTROL UTAMA</p>
+            <h3 style="margin: 3px 0 0 0; font-size: 1.25rem; font-weight:700; color: #1F2937;">Pengaturan Aplikasi</h3>
         </div>
     """, unsafe_allow_html=True)
     st.write("---")
     
-    st.markdown("##### 📥 Opsi Bilangan")
+    st.markdown("##### 📥 Format Bilangan")
     format_output = st.selectbox(
-        "Tipe representasi angka hasil akhir:", 
+        "Format angka hasil akhir:", 
         ["Pecahan / Fraction (1/3)", "Desimal (0.3333)"], 
         label_visibility="collapsed"
     )
     
     st.write("")
     
-    st.markdown("##### ⏱️ Simulasi Jeda")
+    st.markdown("##### ⏱️ Kecepatan Baris")
     kecepatan_simulasi = st.select_slider(
-        "Durasi animasi tiap baris:", options=[1, 2, 3, 4, 5], value=2,
+        "Durasi animasi langkah:", options=[1, 2, 3, 4, 5], value=2,
         format_func=lambda x: f"{x} Detik"
     )
     
     st.write("---")
     
-    # KARTU IDENTITAS MAHASISWA YANG REALISTIS
+    # KARTU IDENTITAS MAHASISWA MINIMALIS PUTIH
     st.markdown("""
-        <div style="border: 1px solid #252A3C; padding: 16px; border-radius: 12px; background-color: #1A1D29;">
-            <p style="margin: 0; font-size: 0.7rem; color: #8E93A6; font-weight: 600; letter-spacing: 0.5px;">TUGAS AKHIR KULIAH</p>
-            <h4 style="margin: 6px 0 2px 0; font-size: 1rem; font-weight: 700; color:#FFFFFF;">Nama Kamu</h4>
-            <p style="margin: 0; font-size: 0.85rem; color: #D4AF37; font-weight: 500;">NIM. XXXXXXXXX</p>
-            <p style="margin: 8px 0 0 0; font-size: 0.8rem; color: #8E93A6;">Prodi Teknik Informatika</p>
+        <div style="border: 1px solid #E5E7EB; padding: 16px; border-radius: 12px; background-color: #F9FAFB;">
+            <p style="margin: 0; font-size: 0.7rem; color: #6B7280; font-weight: 600; letter-spacing: 0.5px;">MAHASISWA</p>
+            <h4 style="margin: 4px 0 2px 0; font-size: 0.95rem; font-weight: 700; color:#1F2937;">Nama Kamu</h4>
+            <p style="margin: 0; font-size: 0.85rem; color: #3B82F6; font-weight: 600;">NIM. XXXXXXXXX</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -52,23 +51,23 @@ with st.sidebar:
 with open("style.css", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# --- HERO SECTION (EDITORIAL STYLE) ---
-st.markdown("<h1 class='brand-title'>the Gauss Elimination.</h1>", unsafe_allow_html=True)
-st.markdown("<p class='brand-subtitle'>Sebuah eksperimen kalkulator matriks interaktif untuk menyelesaikan sistem persamaan linier menggunakan aturan OBE.</p>", unsafe_allow_html=True)
+# --- HERO SECTION (CLEAN TECH) ---
+st.markdown("<h1 class='brand-title'>Gauss Solver</h1>", unsafe_allow_html=True)
+st.markdown("<p class='brand-subtitle'>Kalkulator Operasi Baris Elementer (OBE) minimalis untuk penyelesaian matriks secara akurat.</p>", unsafe_allow_html=True)
 
 kolom_kiri, kolom_kanan = st.columns([2, 1])
 
 with kolom_kanan:
     st.markdown("### 🛠️ Ordo Matriks")
-    n = st.number_input("Tentukan N untuk matriks persegi (N x N):", min_value=2, max_value=10, value=3, step=1, label_visibility="collapsed")
+    n = st.number_input("Ordo N x N:", min_value=2, max_value=10, value=3, step=1, label_visibility="collapsed")
     
     st.write("")
-    st.markdown("##### 💡 Gunakan Contoh Soal:")
-    preset_normal = st.button("Matriks Normal (Solusi Unik)", type="secondary")
-    preset_no_sol = st.button("Matriks Singular (Kasus Khusus)", type="secondary")
+    st.markdown("##### 💡 Contoh Soal Cepat:")
+    preset_normal = st.button("Solusi Unik (Normal)", type="secondary")
+    preset_no_sol = st.button("Kasus Singular (Eror)", type="secondary")
 
 with kolom_kiri:
-    st.markdown("### 📥 Matriks Augmented $[A | b]$")
+    st.markdown("### 📥 Input Nilai Matriks $[A | b]$")
     
     preset_A = [["3", "3/2", "-1"], ["2", "-2", "4"], ["-1", "0.5", "-1"]]
     preset_b = ["1", "-2", "0"]
@@ -113,9 +112,9 @@ st.write("---")
 
 # --- EKSEKUSI PROSES ---
 st.markdown("### 🎬 Lembar Kerja OBE")
-if st.button("MULAI HITUNG MATRIKS", key="run_sim"):
+if st.button("MULAI PROSES KOMPUTASI", key="run_sim"):
     if not input_valid:
-        st.error("Periksa kembali angka yang kamu masukkan.")
+        st.error("Periksa kembali nilai matriks Anda.")
     else:
         solusi, riwayat, verifikasi = eliminasi_gauss_ultimate(A, b, n, format_output)
         
@@ -125,28 +124,28 @@ if st.button("MULAI HITUNG MATRIKS", key="run_sim"):
         
         total_langkah = len(riwayat)
         for indeks, langkah in enumerate(riwayat):
-            status_simulasi.markdown(f"<div class='status-badge'>Langkah ke-{indeks + 1} dari total {total_langkah} tahapan</div>", unsafe_allow_html=True)
+            status_simulasi.markdown(f"<div class='status-badge'>Langkah {indeks + 1} dari {total_langkah}</div>", unsafe_allow_html=True)
             progress_bar.progress((indeks + 1) / total_langkah)
             
             with container_langkah:
                 st.markdown(f"<div class='premium-card'>", unsafe_allow_html=True)
-                st.markdown(f"<h4 style='color: #D4AF37; margin-top:0; margin-bottom:12px;'>Iterasi OBE Tahap {indeks + 1}</h4>", unsafe_allow_html=True)
+                st.markdown(f"<h4 style='color: #1E3A8A; margin-top:0; margin-bottom:12px;'>Tahap Ke-{indeks + 1}</h4>", unsafe_allow_html=True)
                 st.markdown(langkah["teks"])
                 st.table(data=langkah["data"])
                 st.markdown("</div>", unsafe_allow_html=True)
             
             time.sleep(kecepatan_simulasi)
             
-        status_simulasi.markdown("<div class='status-badge' style='color:#12141C !important; background-color:#D4AF37; border-color:#D4AF37;'>✓ Seluruh tahapan selesai dihitung</div>", unsafe_allow_html=True)
+        status_simulasi.markdown("<div class='status-badge' style='color:#FFFFFF !important; background-color:#3B82F6; border-color:#3B82F6;'>✓ Perhitungan Selesai</div>", unsafe_allow_html=True)
         
         st.write("---")
         if solusi is None:
             if verifikasi == "TIDAK_ADA_SOLUSI":
-                st.error("Sistem persamaan tidak konsisten.")
+                st.error("Sistem tidak memiliki solusi.")
             elif verifikasi == "SOLUSI_TAK_BERHINGGA":
                 st.warning("Sistem memiliki solusi tak berhingga.")
         else:
-            st.markdown("<h3 style='color:#D4AF37; margin-bottom:25px;'>📊 Vektor Hasil Akhir:</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color:#1E3A8A; margin-bottom:25px;'>📊 Hasil Akhir Vektor X:</h3>", unsafe_allow_html=True)
             
             cols_hasil = st.columns(n)
             for i in range(n):
@@ -156,6 +155,6 @@ if st.button("MULAI HITUNG MATRIKS", key="run_sim"):
                     st.markdown("</div>", unsafe_allow_html=True)
             
             st.write("")
-            with st.expander("🔬 Lembar Pembuktian Akurasi Rumus"):
+            with st.expander("🔬 Detail Validasi Akurasi"):
                 for v_langkah in verifikasi:
                     st.markdown(f"<div class='verify-card'>{v_langkah}</div>", unsafe_allow_html=True)
