@@ -1,186 +1,154 @@
 import streamlit as st
-import time
+import numpy as np
 from fractions import Fraction
-from matrix_logic import eliminasi_gauss_ultimate, format_angka
 
-# --- INITIAL SETUP ---
-st.set_page_config(
-    page_title="Matrix Solver",
-    page_icon="🟦",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# --- SETTING LAYOUT ---
+st.set_page_config(page_title="Kalkulator Eliminasi Gauss", layout="wide")
 
-# --- PANEL KONTROL SIDEBAR ---
-with st.sidebar:
-    st.markdown("""
-        <div style="padding: 10px 0;">
-            <p style="margin: 0; font-size: 0.75rem; color: #3B82F6; font-weight: 700; letter-spacing: 1px;">KONTROL UTAMA</p>
-            <h3 style="margin: 3px 0 0 0; font-size: 1.25rem; font-weight:700; color: #1F2937;">Pengaturan Aplikasi</h3>
-        </div>
-    """, unsafe_allow_html=True)
-    st.write("---")
-    
-    st.markdown("##### 📥 Format Bilangan")
-    format_output = st.selectbox(
-        "Format angka hasil akhir:", 
-        ["Pecahan / Fraction (1/3)", "Desimal (0.3333)"], 
-        label_visibility="collapsed"
-    )
-    
-    st.write("")
-    
-    st.markdown("##### ⏱️ Kecepatan Baris")
-    kecepatan_simulasi = st.select_slider(
-        "Durasi animasi langkah:", options=[1, 2, 3, 4, 5], value=2,
-        format_func=lambda x: f"{x} Detik"
-    )
-    
-    st.write("---")
-    
-    st.markdown("""
-        <div style="border: 1px solid #E5E7EB; padding: 16px; border-radius: 12px; background-color: #F9FAFB;">
-            <p style="margin: 0; font-size: 0.7rem; color: #6B7280; font-weight: 600; letter-spacing: 0.5px;">MAHASISWA</p>
-            <h4 style="margin: 4px 0 2px 0; font-size: 0.95rem; font-weight: 700; color:#1F2937;">Nama Kamu</h4>
-            <p style="margin: 0; font-size: 0.85rem; color: #3B82F6; font-weight: 600;">NIM. XXXXXXXXX</p>
-        </div>
-    """, unsafe_allow_html=True)
+# --- STYLE CSS SEDERHANA & MINIMALIS (FOKUS PADA DATA) ---
+st.markdown("""
+<style>
+    body { background-color: #FAFAFA; }
+    .title { color: #1E3A8A; font-weight: bold; text-align: center; }
+    .step-card { background-color: #FFFFFF; border: 1px solid #E5E7EB; border-left: 5px solid #3B82F6; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .matrix-box { font-family: monospace; font-size: 1.1rem; background-color: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid #E2E8F0; }
+</style>
+""", unsafe_allow_html=True)
 
-# --- INJEKSI DESAIN ---
-with open("style.css", encoding="utf-8") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+st.markdown("<h1 class='title'>Kalkulator Eliminasi Gauss murni</h1>", unsafe_allow_html=True)
+st.write("Aplikasi ini menyelesaikan Sistem Persamaan Linear (SPL) menggunakan metode **Eliminasi Gauss** (mengubah matriks menjadi Segitiga Atas) disertai penjelasan langkah OBE dan Substitusi Balik.")
 
-# --- HERO SECTION ---
-st.markdown("<h1 class='brand-title'>Gauss Solver</h1>", unsafe_allow_html=True)
-st.markdown("<p class='brand-subtitle'>Kalkulator Operasi Baris Elementer (OBE) minimalis untuk penyelesaian matriks secara akurat.</p>", unsafe_allow_html=True)
-
-# --- RESTRUKTURISASI: PENGATURAN ORDO & PRESET DI LETAKKAN DI ATAS (SANGAT ERGONOMIS DI HP) ---
-st.markdown("### 🛠️ Konfigurasi Utama")
-st.markdown("Silakan pilih ordo matriks dan gunakan opsi preset jika ingin memuat contoh soal secara otomatis:")
-
-kolom_ordo, kolom_preset = st.columns([1, 2])
-
-with kolom_ordo:
-    n = st.number_input("Ordo Matriks (N x N):", min_value=2, max_value=6, value=3, step=1)
-
-with kolom_preset:
-    st.write("<label>Pilih Opsi Preset Soal:</label>", unsafe_allow_html=True)
-    st.markdown('<div class="preset-container">', unsafe_allow_html=True)
-    cols_btn = st.columns(2)
-    with cols_btn[0]:
-        preset_normal = st.button("Solusi Unik (Normal)", type="secondary", use_container_width=True)
-    with cols_btn[1]:
-        preset_no_sol = st.button("Kasus Singular (Error)", type="secondary", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+# --- INPUT CONFIGURATION ---
 st.write("---")
+n = st.number_input("Masukkan Ordo Matriks (N x N):", min_value=2, max_value=5, value=3, step=1)
 
-# --- AREA INPUT UTAMA ---
-st.markdown("### 📥 Input Nilai Matriks $[A | b]$")
-st.markdown("Isi nilai elemen matriks di bawah ini. Kolom paling kanan berwarna biru adalah nilai konstanta hasil ($b$).")
+# --- FUNGSI HELPER FORMAT ANGKA ---
+def to_fraction_str(val):
+    if abs(val) < 1e-9:
+        return "0"
+    frac = Fraction(str(val)).limit_denominator()
+    return str(frac)
 
-preset_A = [["3", "3/2", "-1"], ["2", "-2", "4"], ["-1", "0.5", "-1"]]
-preset_b = ["1", "-2", "0"]
+# --- GENERATE GRID INPUT MINIMALIS (PAS DI HP & LAPTOP) ---
+st.markdown("### 📥 Input Matriks Augmented $[A | b]$")
+cols_input = st.columns(n + 1)
 
-if preset_no_sol and n == 3:
-    preset_A = [["1", "1", "1"], ["2", "2", "2"], ["1", "-1", "2"]]
-    preset_b = ["3", "4", "1"]
-    
-A, b = [], []
-input_valid = True
+A_input = []
+b_input = []
 
-st.markdown('<div class="matrix-area">', unsafe_allow_html=True)
-with st.container():
-    for i in range(n):
-        cols = st.columns(n + 1)
-        baris_A = []
-        for j in range(n):
-            with cols[j]:
-                nilai_inisial = preset_A[i][j] if (preset_normal or preset_no_sol) and n == 3 else ""
-                # TAMBAHAN PENTING: Menggunakan placeholder dinamis (misal: a11, a12) agar pengguna tidak buta arah saat mengetik nilai
-                teks_A = st.text_input(
-                    f"A_{i}_{j}", 
-                    value=nilai_inisial, 
-                    key=f"A_{i}_{j}", 
-                    placeholder=f"a{i+1}{j+1}", 
-                    label_visibility="collapsed"
-                )
-                try:
-                    teks_bersih = teks_A.strip()
-                    nilai_A = float(Fraction(teks_bersih)) if teks_bersih != "" else 0.0
-                except Exception:
-                    st.error("Format salah")
-                    input_valid = False
-                    nilai_A = 0.0
-                baris_A.append(nilai_A)
-        A.append(baris_A)
-        
-        with cols[n]:
-            nilai_b_inisial = preset_b[i] if (preset_normal or preset_no_sol) and n == 3 else ""
-            # TAMBAHAN PENTING: Menggunakan placeholder b1, b2, b3 untuk membedakan kolom konstanta hasil
-            teks_b = st.text_input(
-                f"b_{i}", 
-                value=nilai_b_inisial, 
-                key=f"b_{i}", 
-                placeholder=f"b{i+1}", 
-                label_visibility="collapsed"
-            )
+# Membuat grid input tanpa tumpuk
+for i in range(n):
+    row_inputs = []
+    cols = st.columns(n + 1)
+    for j in range(n):
+        with cols[j]:
+            val = st.text_input(f"A[{i+1}][{j+1}]", value="0", key=f"A_{i}_{j}", label_visibility="visible")
             try:
-                teks_b_bersih = teks_b.strip()
-                nilai_b = float(Fraction(teks_b_bersih)) if teks_b_bersih != "" else 0.0
-            except Exception:
-                input_valid = False
-                nilai_b = 0.0
-            b.append(nilai_b)
-st.markdown('</div>', unsafe_allow_html=True)
+                row_inputs.append(float(Fraction(val)))
+            except:
+                row_inputs.append(0.0)
+    with cols[n]:
+        val_b = st.text_input(f"b[{i+1}]", value="0", key=f"b_{i}", label_visibility="visible")
+        try:
+            b_input.append(float(Fraction(val_b)))
+        except:
+            b_input.append(0.0)
+    A_input.append(row_inputs)
 
+# --- TOMBOL EKSEKUSI ---
 st.write("---")
-
-# --- EKSEKUSI PROSES ---
-st.markdown("### 🎬 Lembar Kerja OBE")
-if st.button("MULAI PROSES KOMPUTASI", key="run_sim"):
-    if not input_valid:
-        st.error("Periksa kembali nilai matriks Anda.")
-    else:
-        solusi, riwayat, verifikasi = eliminasi_gauss_ultimate(A, b, n, format_output)
-        
-        status_simulasi = st.empty()
-        progress_bar = st.progress(0)
-        container_langkah = st.container()
-        
-        total_langkah = len(riwayat)
-        for indeks, langkah in enumerate(riwayat):
-            status_simulasi.markdown(f"<div class='status-badge'>Langkah {indeks + 1} dari {total_langkah}</div>", unsafe_allow_html=True)
-            progress_bar.progress((indeks + 1) / total_langkah)
-            
-            with container_langkah:
-                st.markdown(f"<div class='premium-card'>", unsafe_allow_html=True)
-                st.markdown(f"<h4 style='color: #1E3A8A; margin-top:0; margin-bottom:12px;'>Tahap Ke-{indeks + 1}</h4>", unsafe_allow_html=True)
-                st.write(langkah["teks"]) 
-                st.table(data=langkah["data"])
+if st.button("HITUNG MENGGUNAKAN ELIMINASI GAUSS", type="primary", use_container_width=True):
+    
+    # Konversi ke NumPy Array untuk komputasi linear algebra
+    A = np.array(A_input, dtype=float)
+    b = np.array(b_input, dtype=float)
+    
+    # Gabungkan menjadi matriks augmented [A|b]
+    augmented = np.hstack([A, b.reshape(-1, 1)])
+    
+    st.markdown("### 🎬 Langkah-Langkah Operasi Baris Elementer (OBE)")
+    
+    # Tampilkan Matriks Awal
+    st.markdown("<div class='step-card'>", unsafe_allow_html=True)
+    st.write("**Matriks Augmented Awal $[A|b]$:**")
+    matrix_str = ""
+    for r in range(n):
+        matrix_str += " | ".join([to_fraction_str(augmented[r, c]) for c in range(n)]) + f"  ==>  [ {to_fraction_str(augmented[r, n])} ]\n"
+    st.text(matrix_str)
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # --- PROSES ELIMINASI MAJU (FORWARDS ELIMINATION) ---
+    bisa_diselesaikan = True
+    for i in range(n):
+        # 1. Pivoting parsial jika pivot berharga 0
+        if abs(augmented[i, i]) < 1e-9:
+            tukar_baris = -1
+            for k in range(i + 1, n):
+                if abs(augmented[k, i]) > 1e-9:
+                    tukar_baris = k
+                    break
+            if tukar_baris != -1:
+                augmented[[i, tukar_baris]] = augmented[[tukar_baris, i]]
+                st.markdown("<div class='step-card'>", unsafe_allow_html=True)
+                st.write(f"🔄 **OBE: Tukar Baris {i+1} dengan Baris {tukar_baris+1}** karena elemen pivot bernilai 0.")
+                matrix_str = ""
+                for r in range(n):
+                    matrix_str += " | ".join([to_fraction_str(augmented[r, c]) for c in range(n)]) + f"  ==>  [ {to_fraction_str(augmented[r, n])} ]\n"
+                st.text(matrix_str)
                 st.markdown("</div>", unsafe_allow_html=True)
-            
-            time.sleep(kecepatan_simulasi)
-            
-        status_simulasi.markdown("<div class='status-badge' style='color:#FFFFFF !important; background-color:#3B82F6; border-color:#3B82F6;'>✓ Perhitungan Selesai</div>", unsafe_allow_html=True)
+            else:
+                bisa_diselesaikan = False
+                break
         
-        st.write("---")
-        if solusi is None:
-            if verifikasi == "TIDAK_ADA_SOLUSI":
-                st.error("Sistem tidak memiliki solusi.")
-            elif verifikasi == "SOLUSI_TAK_BERHINGGA":
-                st.warning("Sistem memiliki solusi tak berhingga.")
+        # 2. Eliminasi elemen di bawah pivot
+        for k in range(i + 1, n):
+            factor = augmented[k, i] / augmented[i, i]
+            if abs(factor) > 1e-9:
+                augmented[k, i:] -= factor * augmented[i, i:]
+                st.markdown("<div class='step-card'>", unsafe_allow_html=True)
+                st.write(f"🔢 **OBE: Baris {k+1} = Baris {k+1} - ({to_fraction_str(factor)}) $\\times$ Baris {i+1}**")
+                matrix_str = ""
+                for r in range(n):
+                    matrix_str += " | ".join([to_fraction_str(augmented[r, c]) for c in range(n)]) + f"  ==>  [ {to_fraction_str(augmented[r, n])} ]\n"
+                st.text(matrix_str)
+                st.markdown("</div>", unsafe_allow_html=True)
+
+    # --- VALIDASI HASIL MATRIKS SEGITIGA ATAS ---
+    if not bisa_diselesaikan or abs(augmented[n-1, n-1]) < 1e-9:
+        if abs(augmented[n-1, n]) > 1e-9:
+            st.error("❌ Sistem Persamaan Linear TIDAK MEMILIKI SOLUSI (Matriks Singular Singular).")
         else:
-            st.markdown("<h3 style='color:#1E3A8A; margin-bottom:25px;'>📊 Hasil Akhir Vektor X:</h3>", unsafe_allow_html=True)
+            st.warning("⚠️ Sistem Persamaan Linear MEMILIKI SOLUSI TAK BERHINGGA.")
+    else:
+        # --- PROSES SUBSTITUSI BALIK (BACK SUBSTITUTION) ---
+        st.markdown("### 🔄 Substitusi Balik (Back Substitution)")
+        x = np.zeros(n)
+        
+        for i in range(n - 1, -1, -1):
+            suku_diketahui = 0.0
+            langkah_teks = f"Persamaan dari Baris {i+1}: "
             
-            cols_hasil = st.columns(n)
-            for i in range(n):
-                with cols_hasil[i]:
-                    st.markdown(f"<div class='metric-card'>", unsafe_allow_html=True)
-                    st.metric(label=f"Variabel X_{i+1}", value=format_angka(solusi[i], format_output))
-                    st.markdown("</div>", unsafe_allow_html=True)
+            # Membangun teks penjelasan subtitusi matematika
+            fitur_teks = []
+            for j in range(i + 1, n):
+                suku_diketahui += augmented[i, j] * x[j]
+                fitur_teks.append(f"({to_fraction_str(augmented[i, j])} \\times {to_fraction_str(x[j])})")
             
-            st.write("")
-            with st.expander("🔬 Detail Validasi Akurasi"):
-                for v_langkah in verifikasi:
-                    st.markdown(f"<div class='verify-card'>{v_langkah}</div>", unsafe_allow_html=True)
+            x[i] = (augmented[i, n] - suku_diketahui) / augmented[i, i]
+            
+            st.markdown("<div class='step-card'>", unsafe_allow_html=True)
+            if fitur_teks:
+                st.write(f"Mencari $X_{i+1}$:")
+                st.latex(f"X_{{{i+1}}} = \\frac{{{to_fraction_str(augmented[i, n])} - {' - '.join(fitur_teks)}}}{{{to_fraction_str(augmented[i, i])}}} = {to_fraction_str(x[i])}")
+            else:
+                st.write(f"Mencari $X_{i+1}$ langsung dari baris terakhir:")
+                st.latex(f"X_{{{i+1}}} = \\frac{{{to_fraction_str(augmented[i, n])}}}{{{to_fraction_str(augmented[i, i])}}} = {to_fraction_str(x[i])}")
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        # --- TAMPILKAN HASIL AKHIR ---
+        st.write("---")
+        st.markdown("### 📊 Vektor Hasil Akhir (Solusi SPL):")
+        cols_hasil = st.columns(n)
+        for i in range(n):
+            with cols_hasil[i]:
+                st.metric(label=f"Nilai X_{i+1}", value=to_fraction_str(x[i]))
