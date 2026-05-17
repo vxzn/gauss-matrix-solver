@@ -73,50 +73,53 @@ div[data-testid="stMetricValue"] > div { font-weight: 700 !important; font-size:
 .stButton>button:hover { background: #2563EB !important; transform: translateY(-1px); }
 
 /* ==========================================================================
-   📱 ROMBAK TOTAL HANDPHONE (LAYOUT PAS LAYAR KALKULATOR STANDAR - ANTI SCROLL)
+   📱 🚀 PERBAIKAN RADIKAL HP: 100% MUAT SATU LAYAR (ANTI-SCROLL INPUT)
    ========================================================================== */
 @media (max-width: 768px) {
-    /* Hilangkan padding bawaan Streamlit agar area kerja melebar penuh di HP */
+    /* Lebarkan container utama aplikasi hingga mepet tepi layar HP */
     [data-testid="stAppViewBlockContainer"] {
-        padding: 10px !important;
+        padding: 8px !important;
     }
 
-    .brand-title { font-size: 1.8rem !important; text-align: center !important; }
-    .brand-subtitle { font-size: 0.85rem !important; text-align: center !important; margin-bottom: 15px !important; }
+    .brand-title { font-size: 1.7rem !important; text-align: center !important; }
+    .brand-subtitle { font-size: 0.8rem !important; text-align: center !important; margin-bottom: 15px !important; }
 
-    /* Atur baris kolom di HP agar selalu berjejer ke samping dan membagi rata ruang */
+    /* HANCURKAN Batas Minimum Kolom Bawaan Streamlit */
     div[data-testid="stFormSubmitButton"] + div > div, 
     .stHorizontalBlock {
         display: flex !important;
         flex-direction: row !important; 
         flex-wrap: nowrap !important; 
-        overflow-x: hidden !important; /* Kunci utama: matikan scroll seret samping */
-        gap: 4px !important; /* Jarak sangat tipis antar kotak input */
+        overflow-x: hidden !important; /* Matikan total scroll bar samping */
+        gap: 3px !important; /* Jarak super tipis agar muat */
         width: 100% !important;
     }
 
-    /* Kotak input otomatis mengecil mengikuti sisa lebar layar HP (Sistem Kalkulator) */
-    .stTextInput {
-        flex: 1 1 0% !important; /* Bagi rata lebar kolom yang tersedia secara adil */
-        min-width: 0 !important;
+    /* Paksa setiap kolom elemen widget mengecil secara ekstrem mengikuti lebar layar HP */
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+        width: 100% !important;
+        min-width: 0 !important; /* Menghilangkan paksaan batas minimal kolom */
+        flex: 1 1 0% !important; /* Membagi sisa layar HP secara adil dan rata */
     }
 
+    /* Desain Kotak Input Mini ala Kalkulator Fisik */
     .stTextInput>div>div>input { 
-        font-size: 0.9rem !important; 
-        padding: 8px 0 !important; 
+        font-size: 0.85rem !important; /* Ukuran teks diperkecil agar angka muat */
+        padding: 6px 0 !important; /* Tinggi kotak diperkecil */
         border-radius: 6px !important;
-        width: 100% !important; /* Isi penuh kolomnya */
+        width: 100% !important; 
+        min-width: 0 !important;
         margin: 0 !important;
     }
-    
-    /* Tambahkan garis pembatas visual samar antara matriks A dan vektor b */
-    div[data-testid="stHorizontalBlock"] > div:last-child {
+
+    /* Berikan pembatas visual tipis untuk membedakan Matriks Utama dengan Vektor b */
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"]:last-child {
         border-left: 1.5px dashed #3B82F6 !important;
-        padding-left: 4px !important;
+        padding-left: 3px !important;
     }
 
-    /* Tabel OBE tetap fleksibel */
+    /* Tabel OBE hasil hitungan tetap dibiarkan bisa di-scroll agar angka pecahan panjang tidak rusak */
     .stTable { display: block !important; overflow-x: auto !important; width: 100% !important; }
-    .stTable th, .stTable td { padding: 8px !important; font-size: 0.8rem !important; }
+    .stTable th, .stTable td { padding: 8px !important; font-size: 0.75rem !important; }
     .premium-card { padding: 12px !important; }
 }
